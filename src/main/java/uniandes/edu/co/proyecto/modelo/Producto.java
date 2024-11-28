@@ -1,49 +1,47 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import java.sql.Date;
+import java.util.Date;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import lombok.ToString;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name="productos")
+@Document(collection = "productos")
+@ToString
 public class Producto {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO) 
-    private Long cod_barras;
+    private int cod_barras;
 
     private String nombre;
 
-    private Long costo_bodega;
+    private int costo_bodega;
 
-    private Long precio_unitario;
+    private int precio_unitario;
 
     private String presentacion;
 
-    private Long cantidad_presentacion;
+    private int cantidad_presentacion;
 
     private String unidad_medida;
 
-    private Long peso;
+    private int peso;
 
-    private Long volumen;
+    private int volumen;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @CreatedDate
     private Date fecha_vencimiento;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria", referencedColumnName = "codigo")
-    private Categoria categoria;
+    private int categoria;
 
     public Producto(){;}
 
-    public Producto(Long cod_barras, String nombre, Long costoBodega, Long precioUnitario, String presentacion, Long cantidadPresentacion, String unidadMedida, Long peso, Long volumen, Date fecha_vencimiento, Categoria categoria){
+    public Producto(int cod_barras, String nombre, int costoBodega, int precioUnitario, String presentacion, int cantidadPresentacion, String unidadMedida, int peso, int volumen, Date fecha_vencimiento, int categoria){
         
         this.cod_barras = cod_barras;
         this.nombre = nombre;
@@ -61,7 +59,7 @@ public class Producto {
 
     //GETTERS
 
-    public Long getCod_barras(){
+    public int getCod_barras(){
         return cod_barras;
     }
 
@@ -69,11 +67,11 @@ public class Producto {
         return nombre;
     }
 
-    public Long getCosto_bodega(){
+    public int getCosto_bodega(){
         return costo_bodega;
     }
 
-    public Long getPrecio_unitario(){
+    public int getPrecio_unitario(){
         return precio_unitario;
     }
 
@@ -81,11 +79,11 @@ public class Producto {
         return presentacion;
     }
 
-    public Long getPeso(){
+    public int getPeso(){
         return peso;
     }
 
-    public Long getVolumen(){
+    public int getVolumen(){
         return volumen;
     }
 
@@ -93,7 +91,7 @@ public class Producto {
         return unidad_medida;
     }
 
-    public Long getCantidad_presentacion(){
+    public int getCantidad_presentacion(){
         return cantidad_presentacion;
     }
 
@@ -101,13 +99,13 @@ public class Producto {
         return fecha_vencimiento;
     }
 
-    public Categoria getCategoria(){
+    public int getCategoria(){
         return categoria;
     }
 
     //SETTERS
 
-    public void setCodigoBarras(Long cod_barras){
+    public void setCodigoBarras(int cod_barras){
         this.cod_barras = cod_barras;
     }
 
@@ -115,11 +113,11 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public void setCostoBodega(Long costo_bodega){
+    public void setCostoBodega(int costo_bodega){
         this.costo_bodega = costo_bodega;
     }
 
-    public void setPrecioUnitario(Long precio_unitario){
+    public void setPrecioUnitario(int precio_unitario){
         this.precio_unitario = precio_unitario;
     }
 
@@ -127,11 +125,11 @@ public class Producto {
         this.presentacion = presentacion;
     }
 
-    public void setPeso(Long peso){
+    public void setPeso(int peso){
         this.peso = peso;
     }
 
-    public void setVolumen(Long volumen){
+    public void setVolumen(int volumen){
         this.volumen = volumen;
     }
 
@@ -139,7 +137,7 @@ public class Producto {
         this.unidad_medida = unidad_medida;
     }
 
-    public void setCantidadPresentacion(Long cantidad_presentacion){
+    public void setCantidadPresentacion(int cantidad_presentacion){
         this.cantidad_presentacion = cantidad_presentacion;
     }
 
@@ -147,7 +145,7 @@ public class Producto {
         this.fecha_vencimiento = fecha_vencimiento;
     }
 
-    public void setCategoria(Categoria categoria){
+    public void setCategoria(int categoria){
         this.categoria = categoria;
     }
 

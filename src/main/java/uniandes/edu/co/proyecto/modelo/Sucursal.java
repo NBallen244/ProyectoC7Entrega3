@@ -12,21 +12,23 @@ import lombok.ToString;
 public class Sucursal {
 
     @Id
-    private Long id;
+    private int id;
 
     private String nombre;
 
-    private Long tamaño;
+    private int tamaño;
 
     private String direccion;
 
-    private Long telefono;
+    private int telefono;
 
     private String ciudad;
 
     private List<Bodega> bodegas;
 
-    public Sucursal(String nombre, Long tamaño, String direccion, Long telefono, String ciudad){
+    public Sucursal(){}
+
+    public Sucursal(String nombre, int tamaño, String direccion, int telefono, String ciudad){
         this.nombre = nombre;
         this.tamaño = tamaño;
         this.direccion = direccion;
@@ -34,11 +36,11 @@ public class Sucursal {
         this.ciudad = ciudad;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -50,11 +52,11 @@ public class Sucursal {
         this.nombre = nombre;
     }
 
-    public Long getTamaño() {
+    public int getTamaño() {
         return tamaño;
     }
 
-    public void setTamaño(Long tamaño) {
+    public void setTamaño(int tamaño) {
         this.tamaño = tamaño;
     }
 
@@ -66,11 +68,11 @@ public class Sucursal {
         this.direccion = direccion;
     }
 
-    public Long getTelefono() {
+    public int getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(Long telefono) {
+    public void setTelefono(int telefono) {
         this.telefono = telefono;
     }
 
@@ -90,7 +92,6 @@ public class Sucursal {
         this.bodegas = bodegas;
     }
 
-    //TODO: GETTER Y SETTERS
 
     
     

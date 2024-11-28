@@ -1,53 +1,45 @@
 package uniandes.edu.co.proyecto.modelo;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import java.util.Date;
+import java.util.List;
 
-import java.sql.Date;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import lombok.ToString;
 
 
-@Entity
-@Table(name="ordenes")
+@Document(collection = "productos")
+@ToString
 public class Orden {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO) 
-    private Long id;
+    private int id;
 
-    private String estado;
+    private String estado="vigente";
 
     private Date fecha_estimada;
 
-    private Date fecha_creacion;
+    private Date fecha_creacion=new Date();
 
-    @ManyToOne
-    @JoinColumn(name = "proveedor", referencedColumnName = "nit")
-    private Proveedor proveedor;
+    private int proveedor;
 
-    @ManyToOne
-    @JoinColumn(name = "sucursal_destino", referencedColumnName = "id")
-    private Sucursal sucursal_destino;
+    private int sucursal_destino;
+
+    private List<ProductosOrden> productos;
 
     public Orden(){;}
 
-    public Orden(Date fecha_estimada, Proveedor proveedor, Sucursal sucursal_destino){
-        this.estado = "vigente";
+    public Orden(Date fecha_estimada, int proveedor, int sucursal_destino){
         this.fecha_estimada = fecha_estimada;
-        this.fecha_creacion = new Date(new java.util.Date().getTime());
         this.proveedor = proveedor;
-        this.sucursal_destino = sucursal_destino;
-        
+        this.sucursal_destino = sucursal_destino;  
     }
 
     //GETTERS
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
@@ -63,18 +55,28 @@ public class Orden {
         return fecha_creacion;
     }
 
-    public Proveedor getProveedor(){
+    public int getProveedor(){
         return proveedor;
     }
 
-    public Sucursal getSucursal_destino(){
+    public int getSucursal_destino(){
         return sucursal_destino;
+    }
+
+    public List<ProductosOrden> getProductos() {
+        return productos;
     }
 
     //SETTERS
 
-    public void setId(Long id) {
+    
+
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public void setProductos(List<ProductosOrden> productos) {
+        this.productos = productos;
     }
 
     public void setEstado(String estado){
@@ -89,8 +91,12 @@ public class Orden {
         this.fecha_creacion = fecha_creacion;
     }
 
-    public void setProveedor(Proveedor proveedor){
+    public void setProveedor(int proveedor){
         this.proveedor = proveedor;
+    }
+
+    public void setSucursal_destino(int sucursal_destino) {
+        this.sucursal_destino = sucursal_destino;
     }
 
 }

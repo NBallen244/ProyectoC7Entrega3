@@ -1,26 +1,22 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name="categorias")
+import lombok.ToString;
+
+@Document(collection = "categorias")
+@ToString
 public class Categoria {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO) 
-    private Long codigo;
+    private int codigo;
 
     private String nombre;
 
     private String descripcion;
 
     private String caracteristicas;
-
-    public Categoria(){;}
 
     public Categoria(String nombre, String descripcion, String caracteristicas){
 
@@ -30,11 +26,13 @@ public class Categoria {
 
     }
 
-    public Long getCodigo() {
+    public Categoria(){}
+
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setcodigo(Long codigo) {
+    public void setcodigo(int codigo) {
         this.codigo = codigo;
     }
 

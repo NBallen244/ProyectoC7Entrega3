@@ -8,26 +8,27 @@ import lombok.ToString;
 public class Bodega {
 
     @Id
-    private Long id;
+    private int id;
 
     private String nombre;
 
-    private Long tamaño;
+    private int tamaño;
 
+    public Bodega(){}
 
-    public Bodega(String nombre, Long tamaño){
+    public Bodega(String nombre, int tamaño){
 
         this.tamaño = tamaño;
         this.nombre = nombre;
 
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -39,11 +40,11 @@ public class Bodega {
         this.nombre = nombre;
     }
 
-    public Long getTamaño(){
+    public int getTamaño(){
         return tamaño;
     }
 
-    public void setTamaño(Long tamaño){
+    public void setTamaño(int tamaño){
         this.tamaño = tamaño;
     }
 

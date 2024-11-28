@@ -1,43 +1,46 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import lombok.ToString;
 
-@Entity
-@Table(name="productosOrden")
+@ToString
 public class ProductosOrden {
-    @EmbeddedId
-    private ProductosOrdenPK pk;
 
-    private Long cantidad;
-    private Long precio_acordado;
+    private int producto;
+    private int cantidad;
+    private int precio_acordado;
 
     public ProductosOrden(){;}
     
-    public ProductosOrden(ProductosOrdenPK pk, Long cantidad, Long precio_acordado) {
-        this.pk = pk;
+    public ProductosOrden(int producto, int cantidad, int precio_acordado) {
+        this.producto = producto;
         this.cantidad = cantidad;
         this.precio_acordado = precio_acordado;
     }
-    public ProductosOrdenPK getPk() {
-        return pk;
+
+    public int getProducto() {
+        return producto;
     }
-    public void setPk(ProductosOrdenPK pk) {
-        this.pk = pk;
+
+    public void setProducto(int producto) {
+        this.producto = producto;
     }
-    public Long getCantidad() {
+
+    public int getCantidad() {
         return cantidad;
     }
-    public void setCantidad(Long cantidad) {
+
+    public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    public Long getPrecio_acordado() {
+
+    public int getPrecio_acordado() {
         return precio_acordado;
     }
-    public void setPrecio_acordado(Long precio_acordado) {
+
+    public void setPrecio_acordado(int precio_acordado) {
         this.precio_acordado = precio_acordado;
     }
+    
 
 
 }
