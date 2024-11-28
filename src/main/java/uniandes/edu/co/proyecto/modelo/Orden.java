@@ -4,8 +4,10 @@ package uniandes.edu.co.proyecto.modelo;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.ToString;
 
@@ -19,8 +21,12 @@ public class Orden {
 
     private String estado="vigente";
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @CreatedDate
     private Date fecha_estimada;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    @CreatedDate
     private Date fecha_creacion=new Date();
 
     private int proveedor;
