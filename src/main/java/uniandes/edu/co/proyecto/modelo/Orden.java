@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.ToString;
 
 
-@Document(collection = "productos")
+@Document(collection = "ordenes")
 @ToString
 public class Orden {
 

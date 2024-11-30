@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.ToString;
 
-@Document(collection = "almacenajes")
+@Document(collection = "inventarios")
 @ToString
 public class Almacenaje {
 
