@@ -1,0 +1,52 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'nombre',
+      'costo_bodega',
+      'precio_unitario',
+      'presentacion',
+      'cantidad_presentacion',
+      'unidad_medida',
+      'peso',
+      'volumen',
+      'fecha_vencimiento',
+      'categoria'
+    ],
+    properties: {
+      _id: {
+        bsonType: 'int'
+      },
+      nombre: {
+        bsonType: 'string'
+      },
+      fecha: {
+        bsonType: 'date'
+      },
+      costo_bodega: {
+        bsonType: 'int'
+      },
+      precio_unitario: {
+        bsonType: 'int'
+      },
+      presentacion: {
+        bsonType: 'string'
+      },
+      cantidad_presentacion: {
+        bsonType: 'int'
+      },
+      unidad_medida: {
+        bsonType: 'string'
+      },
+      peso: {
+        bsonType: 'int'
+      },
+      volumen: {
+        bsonType: 'int'
+      },
+      categoria: {
+        bsonType: 'int'
+      }
+    }
+  }
+}

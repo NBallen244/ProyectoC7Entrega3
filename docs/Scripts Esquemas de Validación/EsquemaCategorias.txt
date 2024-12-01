@@ -1,0 +1,24 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'nombre',
+      'descripcion',
+      'caracteristicas'
+    ],
+    properties: {
+      _id: {
+        bsonType: 'int'
+      },
+      nombre: {
+        bsonType: 'string'
+      },
+      descripcion: {
+        bsonType: 'string'
+      },
+      caracteristicas: {
+        bsonType: 'string'
+      }
+    }
+  }
+}

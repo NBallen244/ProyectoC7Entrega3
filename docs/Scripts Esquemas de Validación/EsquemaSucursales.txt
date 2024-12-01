@@ -1,0 +1,41 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'nombre',
+      'tamaño',
+      'direccion',
+      'telefono',
+      'ciudad',
+      'bodegas'
+    ],
+    properties: {
+      nombre: {
+        bsonType: 'string'
+      },
+      'tamaño': {
+        bsonType: 'int'
+      },
+      direccion: {
+        bsonType: 'string'
+      },
+      telefono: {
+        bsonType: 'int'
+      },
+      ciudad: {
+        bsonType: 'string'
+      },
+      bodegas: {
+        bsonType: 'array',
+        items: {
+          bsonType: 'object',
+          required: [
+            'numero',
+            'nombre',
+            'tamaño'
+          ]
+        }
+      }
+    }
+  }
+}

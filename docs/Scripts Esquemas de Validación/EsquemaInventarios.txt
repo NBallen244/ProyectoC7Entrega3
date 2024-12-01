@@ -1,0 +1,48 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'sucursal',
+      'bodega',
+      'inventarios'
+    ],
+    properties: {
+      sucursal: {
+        bsonType: 'int'
+      },
+      bodega: {
+        bsonType: 'int'
+      },
+      inventarios: {
+        bsonType: 'array',
+        items: {
+          bsonType: 'object',
+          required: [
+            'producto',
+            'costo_promedio',
+            'capacidad',
+            'cantidad',
+            'nivel_minimo'
+          ],
+          properties: {
+            producto: {
+              bsonType: 'int'
+            },
+            cantidad: {
+              bsonType: 'int'
+            },
+            capacidad: {
+              bsonType: 'int'
+            },
+            costo_promedio: {
+              bsonType: 'int'
+            },
+            nivel_minimo: {
+              bsonType: 'int'
+            }
+          }
+        }
+      }
+    }
+  }
+}

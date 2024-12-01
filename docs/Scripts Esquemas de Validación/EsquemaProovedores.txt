@@ -1,0 +1,35 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'nombre',
+      'direccion',
+      'contacto',
+      'tel_contacto',
+      'productos'
+    ],
+    properties: {
+      _id: {
+        bsonType: 'int'
+      },
+      nombre: {
+        bsonType: 'string'
+      },
+      direccion: {
+        bsonType: 'string'
+      },
+      contacto: {
+        bsonType: 'string'
+      },
+      tel_contacto: {
+        bsonType: 'int'
+      },
+      productos: {
+        bsonType: 'array',
+        items: {
+          bsonType: 'int'
+        }
+      }
+    }
+  }
+}

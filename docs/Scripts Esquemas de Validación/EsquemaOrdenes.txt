@@ -1,0 +1,55 @@
+{
+  $jsonSchema: {
+    bsonType: 'object',
+    required: [
+      'estado',
+      'fecha_estimada',
+      'fecha_creacion',
+      'proveedor',
+      'sucursal_destino',
+      'productos'
+    ],
+    properties: {
+      _id: {
+        bsonType: 'int'
+      },
+      estado: {
+        bsonType: 'string'
+      },
+      fecha_estimada: {
+        bsonType: 'date'
+      },
+      fecha_creacion: {
+        bsonType: 'date'
+      },
+      proveedor: {
+        bsonType: 'int'
+      },
+      sucursal_destino: {
+        bsonType: 'int'
+      },
+      productos: {
+        bsonType: 'array',
+        items: {
+          bsonType: 'object',
+          required: [
+            'producto',
+            'cantidad',
+            'precio_acordado'
+          ],
+          properties: {
+            producto: {
+              bsonType: 'int'
+            },
+            cantidad: {
+              bsonType: 'int'
+            },
+            precio_acordado: {
+              bsonType: 'int'
+            }
+          }
+        }
+      }
+    }
+  }
+}

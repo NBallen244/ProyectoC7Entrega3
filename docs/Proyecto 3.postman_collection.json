@@ -1,0 +1,818 @@
+{
+	"info": {
+		"_postman_id": "123ff98a-9308-404c-9351-9722bb527e56",
+		"name": "Proyecto 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "37641259"
+	},
+	"item": [
+		{
+			"name": "Sucursal",
+			"item": [
+				{
+					"name": "Crear una sucursal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n    \"nombre\": \"sucursal1\",\r\n    \"tamaño\": 29,\r\n    \"direccion\":\"Calle 127\",\r\n    \"telefono\": 123,\r\n    \"ciudad\": \"Bogotá\",\r\n    \"bodegas\": []\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/sucursales/new/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"sucursales",
+								"new",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver sucursales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/sucursales",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"sucursales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear bodega",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"numero\": 1,\r\n    \"nombre\": \"Bodega1\",\r\n    \"tamaño\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/sucursales/{{num_sucursal}}/newBodega",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"sucursales",
+								"{{num_sucursal}}",
+								"newBodega"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Borrar bodega",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/sucursales/36/deleteBodega/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"sucursales",
+								"36",
+								"deleteBodega",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Proveedor",
+			"item": [
+				{
+					"name": "Crear proveedor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nit\": 1234,\r\n    \"nombre\":\"Chelet\",\r\n    \"direccion\":\"Ce 154\",\r\n    \"contacto\":\"Ana\",\r\n    \"tel_contacto\":555,\r\n    \"productos\":[]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/proveedores/new/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"proveedores",
+								"new",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar proveedor",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nit\": 1234,\r\n    \"nombre\":\"porv3\",\r\n    \"direccion\":\"Ce 154\",\r\n    \"contacto\":\"Ana\",\r\n    \"tel_contacto\":555,\r\n    \"productos\":[]\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/proveedores/1234/edit/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"proveedores",
+								"1234",
+								"edit",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "proveedores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/proveedores/1234",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"proveedores",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Categoria",
+			"item": [
+				{
+					"name": "Crear categoria",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\": \"Congelados\",\r\n    \"descripcion\":\"Productos congelados\",\r\n    \"caracteristicas\": \"Se deben mantener congelados\"\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/categorias/new/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"categorias",
+								"new",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leer una categoria por codigo Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/categorias/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"categorias",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leer una categoria por nombre Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/categorias/consulta?nombre=Covenant Transportation Group, Inc.",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"categorias",
+								"consulta"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "Covenant Transportation Group, Inc."
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Producto",
+			"item": [
+				{
+					"name": "Crear producto",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"jabon\",\r\n    \"costo_bodega\":20,\r\n    \"precio_unitario\":20,\r\n    \"presentacion\":\"Botella de 100ml\",\r\n    \"cantidad_presentacion\":100,\r\n    \"unidad_medida\":\"ml\",\r\n    \"peso\":20,\r\n    \"volumen\":20,\r\n    \"fecha_vencimiento\":\"2025-10-11\",\r\n    \"categoria\":1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/productos/new/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"productos",
+								"new",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leer productos Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/productos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leer producto con id Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/productos/53",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"productos",
+								"53"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leer producto con nombre Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/productos/consultaNombre?nombre=queso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"productos",
+								"consultaNombre"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "queso"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar un producto Copy",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombre\":\"probobolone\",\r\n    \"costo_bodega\": 100,\r\n    \"precio_unitario\": 5,\r\n    \"presentacion\":\"paquete de 14gr\",\r\n    \"cantidad_presentacion\":14,\r\n    \"unidad_medida\":\"gr\",\r\n    \"peso\":100,\r\n    \"volumen\":20,\r\n    \"fecha_vencimiento\":\"2026-09-11\",\r\n    \"categoria\":2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/productos/53/edit/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"productos",
+								"53",
+								"edit",
+								"save"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orden",
+			"item": [
+				{
+					"name": "Crear orden",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fecha_estimada\": \"2024-12-09\",\r\n    \"proveedor\": 30,\r\n    \"sucursal_destino\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/ordenes/new/save?productos=6,9&precios=10000,20000&cantidades=1,4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"ordenes",
+								"new",
+								"save"
+							],
+							"query": [
+								{
+									"key": "productos",
+									"value": "6,9"
+								},
+								{
+									"key": "precios",
+									"value": "10000,20000"
+								},
+								{
+									"key": "cantidades",
+									"value": "1,4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Leer orden",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/ordenes/12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"ordenes",
+								"12"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Consultas",
+			"item": [
+				{
+					"name": "Productos por Caracteristicas",
+					"item": [
+						{
+							"name": "RFC1.1 Productos con precio en cierto rango Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/superandesC7/productos/consulta?precioMin=25&precioMax=30&filtro=rangoPrecio",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"superandesC7",
+										"productos",
+										"consulta"
+									],
+									"query": [
+										{
+											"key": "precioMin",
+											"value": "25"
+										},
+										{
+											"key": "precioMax",
+											"value": "30"
+										},
+										{
+											"key": "filtro",
+											"value": "rangoPrecio"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RFC1.2 Productos con fecha de vencimiento posterior a Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/superandesC7/productos/consulta?fecha=2023-12-31&filtro=fechaMin",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"superandesC7",
+										"productos",
+										"consulta"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2023-12-31"
+										},
+										{
+											"key": "filtro",
+											"value": "fechaMin"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RFC1.3 Productos con fecha de vencimiento anterior a Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/superandesC7/productos/consulta?fecha=2023-12-31&filtro=fechaMax",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"superandesC7",
+										"productos",
+										"consulta"
+									],
+									"query": [
+										{
+											"key": "fecha",
+											"value": "2023-12-31"
+										},
+										{
+											"key": "filtro",
+											"value": "fechaMax"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RFC1.4 Disponibilidad en x sucursal Copy",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/superandesC7/productos/consulta?sucursal=1&filtro=sucursal",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"superandesC7",
+										"productos",
+										"consulta"
+									],
+									"query": [
+										{
+											"key": "sucursal",
+											"value": "1"
+										},
+										{
+											"key": "filtro",
+											"value": "sucursal"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "RFC1.5 Productos de cierta categoria",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/superandesC7/productos/consulta?categoria=2&filtro=categoria",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"superandesC7",
+										"productos",
+										"consulta"
+									],
+									"query": [
+										{
+											"key": "categoria",
+											"value": "2"
+										},
+										{
+											"key": "filtro",
+											"value": "categoria"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Inventario sucursal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/superandesC7/sucursales/1/inventario",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"superandesC7",
+								"sucursales",
+								"1",
+								"inventario"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
