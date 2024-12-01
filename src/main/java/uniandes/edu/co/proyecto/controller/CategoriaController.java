@@ -36,7 +36,7 @@ public class CategoriaController {
     public ResponseEntity<Categoria> categorias(@PathVariable("codigo")int codigo) {
         try {
             List<Categoria> categorias = categoriaRepository.buscarCategoriaPorId(codigo);
-            return ResponseEntity.ok(categorias.getFirst());
+            return ResponseEntity.ok(categorias.get(0));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

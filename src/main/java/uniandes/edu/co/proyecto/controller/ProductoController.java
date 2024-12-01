@@ -56,7 +56,7 @@ public class ProductoController {
     @GetMapping("/productos/{codigo}")
     public ResponseEntity<Producto> getProducto(@PathVariable("codigo")int codigo) {
         try {
-            Producto producto = productoRepository.buscarProductoPorId(codigo).getFirst();
+            Producto producto = productoRepository.buscarProductoPorId(codigo).get(0);
             return ResponseEntity.ok(producto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

@@ -48,7 +48,7 @@ public class OrdenController {
             if (ordenes.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orden no encontrada");
             }
-            Orden orden = ordenes.getFirst();
+            Orden orden = ordenes.get(0);
 
             return ResponseEntity.ok(orden);
         } catch (Exception e) {
@@ -81,7 +81,7 @@ public class OrdenController {
                 return new ResponseEntity<>("Sucursal no encontrada", HttpStatus.CREATED);
             }
 
-            Proveedor proveedor=proveedorRepository.buscarProveedorPorId(norden.getProveedor()).getFirst();
+            Proveedor proveedor=proveedorRepository.buscarProveedorPorId(norden.getProveedor()).get(0);
             List<Integer> ofertas=proveedor.getProductos();
             for (int i:id_productos){
                 if (!ofertas.contains(i)){

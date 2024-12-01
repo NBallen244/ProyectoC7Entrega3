@@ -55,7 +55,7 @@ public class SucursalesController {
             if (sucursales.isEmpty()) {
                 return new ResponseEntity<String>("No existe la sucursal", HttpStatus.BAD_REQUEST);
             }
-            Sucursal sucursal = sucursales.getFirst();
+            Sucursal sucursal = sucursales.get(0);
             if (sucursal.getBodegas().isEmpty()) {
                 return new ResponseEntity<String>("La sucursal no tiene bodegas", HttpStatus.BAD_REQUEST);
             }
@@ -141,7 +141,7 @@ public class SucursalesController {
                 }
                 List<Almacenaje> inventario=almacenajeRepository.buscarInventarioPorSucursalyBodega(id, idBodega);
                 if (!inventario.isEmpty()) {
-                    if (inventario.getFirst().getInventarios().size()>0) {
+                    if (inventario.get(0).getInventarios().size()>0) {
                     return new ResponseEntity<>("No se puede borrar la bodega porque tiene inventario", HttpStatus.BAD_REQUEST);}
                     else{sucursalRepository.eliminarBodega(id, idBodega);}
                 }
