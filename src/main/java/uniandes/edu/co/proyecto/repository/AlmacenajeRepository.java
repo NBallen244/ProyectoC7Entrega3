@@ -18,6 +18,5 @@ public interface AlmacenajeRepository extends MongoRepository<Almacenaje, Intege
 
     @Query("{sucursal:?0}")
     List<Almacenaje> buscarInventarioPorSucursal(int sucursal);
-    
 
 }

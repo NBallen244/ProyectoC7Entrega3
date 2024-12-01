@@ -2,7 +2,9 @@ package uniandes.edu.co.proyecto.controller;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uniandes.edu.co.proyecto.modelo.Almacenaje;
 import uniandes.edu.co.proyecto.modelo.Bodega;
+import uniandes.edu.co.proyecto.modelo.Inventario;
 import uniandes.edu.co.proyecto.modelo.Orden;
 import uniandes.edu.co.proyecto.modelo.Sucursal;
 import uniandes.edu.co.proyecto.repository.AlmacenajeRepository;
@@ -40,6 +43,37 @@ public class SucursalesController {
         try {
             Collection<Sucursal> sucursales = sucursalRepository.buscarSucursales();
             return ResponseEntity.ok(sucursales);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/sucursales/{id}/inventario")
+    public ResponseEntity<?> getInventario(@PathVariable("id") int id) {
+        try {
+            List<Sucursal> sucursales = sucursalRepository.buscarSucursalPorId(id);
+            if (sucursales.isEmpty()) {
+                return new ResponseEntity<String>("No existe la sucursal", HttpStatus.BAD_REQUEST);
+            }
+            Sucursal sucursal = sucursales.getFirst();
+            if (sucursal.getBodegas().isEmpty()) {
+                return new ResponseEntity<String>("La sucursal no tiene bodegas", HttpStatus.BAD_REQUEST);
+            }
+            List<Almacenaje> inventario = almacenajeRepository.buscarInventarioPorSucursal(id);
+            if (inventario.isEmpty()) {
+                return new ResponseEntity<String>("Las bodegas de la sucursal estan vacías", HttpStatus.BAD_REQUEST);
+            }
+
+            Map<String, Object> inventarioMap = new HashMap<>();
+            inventarioMap.put("sucursal", String.valueOf(id)+'-'+sucursal.getNombre());
+            inventarioMap.put("bodegas", new ArrayList<Map<Integer, List<Inventario>>>());
+            for (Almacenaje almacenaje : inventario) {
+                Map<Integer, List<Inventario>> bodegaMap = new HashMap<>();
+                bodegaMap.put(almacenaje.getBodega(), almacenaje.getInventarios());
+                ((ArrayList<Map<Integer, List<Inventario>>>) inventarioMap.get("bodegas")).add(bodegaMap);
+            }
+            return ResponseEntity.ok(inventarioMap);
+            
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
