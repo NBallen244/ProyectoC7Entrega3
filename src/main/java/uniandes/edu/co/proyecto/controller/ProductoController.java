@@ -1,8 +1,15 @@
 package uniandes.edu.co.proyecto.controller;
 
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 import java.util.Collection;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import uniandes.edu.co.proyecto.modelo.Producto;
+import uniandes.edu.co.proyecto.modelo.Secuencia;
 import uniandes.edu.co.proyecto.repository.CategoriaRepository;
 import uniandes.edu.co.proyecto.repository.ProductoRepository;
 
@@ -27,6 +35,16 @@ public class ProductoController {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private MongoOperations mongoOperations;
+
+    public int generateSequence(String seqName) {
+        Secuencia counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
+        new Update().inc("seq",1), options().returnNew(true).upsert(true),
+        Secuencia.class);
+    return !Objects.isNull(counter) ? counter.getSeq() : 1;
+    }
 
     @GetMapping("/productos")
     public Collection<Producto> getProductos() {
@@ -85,6 +103,7 @@ public class ProductoController {
             if (producto.getCosto_bodega() <= 0 || producto.getPrecio_unitario() <= 0 || producto.getPeso() <= 0 || producto.getVolumen() <= 0 || producto.getCantidad_presentacion() <= 0|| producto.getCategoria() <= 0 || producto.getFecha_vencimiento() == null || producto.getNombre() == null || producto.getPresentacion() == null || producto.getUnidad_medida() == null){
                 return new ResponseEntity<>("Valores faltantes", HttpStatus.BAD_REQUEST);
             }
+            producto.setCodigoBarras(generateSequence(Producto.SEQUENCE_NAME));
             productoRepository.insertarProducto(producto);
             return new ResponseEntity<>("Producto creado exitosamente", HttpStatus.CREATED);
         }

@@ -1,5 +1,6 @@
 package uniandes.edu.co.proyecto.modelo;
 
+import org.springframework.data.annotation.Transient;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -10,6 +11,9 @@ import lombok.ToString;
 @Document(collection = "sucursales")
 @ToString
 public class Sucursal {
+
+    @Transient
+    public static final String SEQUENCE_NAME = "secuencia_sucursal";
 
     @Id
     private int id;

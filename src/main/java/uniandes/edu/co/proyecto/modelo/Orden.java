@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,6 +16,9 @@ import lombok.ToString;
 @Document(collection = "ordenes")
 @ToString
 public class Orden {
+
+    @Transient
+    public static final String SEQUENCE_NAME = "secuencia_ordenes";
 
     @Id
     private int id;

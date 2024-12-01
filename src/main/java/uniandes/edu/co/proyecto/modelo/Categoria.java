@@ -1,6 +1,8 @@
 package uniandes.edu.co.proyecto.modelo;
 
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.ToString;
@@ -8,6 +10,9 @@ import lombok.ToString;
 @Document(collection = "categorias")
 @ToString
 public class Categoria {
+
+    @Transient
+    public static final String SEQUENCE_NAME = "secuencia_categorias";
 
     @Id
     private int codigo;
@@ -33,7 +38,7 @@ public class Categoria {
         return codigo;
     }
 
-    public void setcodigo(int codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 

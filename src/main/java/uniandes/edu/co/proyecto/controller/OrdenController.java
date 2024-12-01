@@ -1,12 +1,19 @@
 package uniandes.edu.co.proyecto.controller;
 
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uniandes.edu.co.proyecto.modelo.Orden;
 import uniandes.edu.co.proyecto.modelo.ProductosOrden;
 import uniandes.edu.co.proyecto.modelo.Proveedor;
+import uniandes.edu.co.proyecto.modelo.Secuencia;
 import uniandes.edu.co.proyecto.repository.OrdenRepository;
 import uniandes.edu.co.proyecto.repository.ProveedorRepository;
 import uniandes.edu.co.proyecto.repository.SucursalRepository;
@@ -35,6 +43,16 @@ public class OrdenController {
     private ProveedorRepository proveedorRepository;
     @Autowired
     private SucursalRepository sucursalRepository;
+
+    @Autowired
+    private MongoOperations mongoOperations;
+
+    public int generateSequence(String seqName) {
+        Secuencia counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
+        new Update().inc("seq",1), options().returnNew(true).upsert(true),
+        Secuencia.class);
+    return !Objects.isNull(counter) ? counter.getSeq() : 1;
+    }
 
     @GetMapping("/ordenes")
     public Collection<Orden> getOrdenes() {
@@ -106,6 +124,7 @@ public class OrdenController {
                 productosOrden.add(producto);
             }
             norden.setProductos(productosOrden);
+            norden.setId(generateSequence(Orden.SEQUENCE_NAME));
             ordenRepository.insertarOrden(norden);
             return new ResponseEntity<>("Orden creada exitosamente", HttpStatus.CREATED);
             
