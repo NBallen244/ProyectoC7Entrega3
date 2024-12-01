@@ -27,7 +27,7 @@ public class Orden {
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @CreatedDate
-    private Date fecha_creacion=new Date();
+    private Date fecha_creacion;
 
     private int proveedor;
 
@@ -37,7 +37,9 @@ public class Orden {
 
     public Orden(){;}
 
-    public Orden(Date fecha_estimada, int proveedor, int sucursal_destino){
+    public Orden(int id, Date fecha_estimada, int proveedor, int sucursal_destino){
+        this.id = id;
+        this.fecha_creacion = new Date();
         this.fecha_estimada = fecha_estimada;
         this.proveedor = proveedor;
         this.sucursal_destino = sucursal_destino;  

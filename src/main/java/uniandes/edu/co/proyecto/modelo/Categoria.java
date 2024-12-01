@@ -18,8 +18,9 @@ public class Categoria {
 
     private String caracteristicas;
 
-    public Categoria(String nombre, String descripcion, String caracteristicas){
+    public Categoria(int codigo, String nombre, String descripcion, String caracteristicas){
 
+        this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.caracteristicas = caracteristicas;

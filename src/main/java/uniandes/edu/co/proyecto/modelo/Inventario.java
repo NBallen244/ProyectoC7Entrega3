@@ -5,7 +5,7 @@ import lombok.ToString;
 @ToString
 public class Inventario {
 
-    private int producto;
+    private String producto;
     private int costo_promedio;
 
     private int capacidad;
@@ -15,7 +15,7 @@ public class Inventario {
 
     public Inventario(){;}
 
-    public Inventario(int costoPromedio, int capacidadBodega, int nivelMinimoReorden, int cantidad, int producto){
+    public Inventario(int costoPromedio, int capacidadBodega, int nivelMinimoReorden, int cantidad, String producto){
         this.producto = producto;
         this.costo_promedio = costoPromedio;
         this.capacidad = capacidadBodega;
@@ -23,11 +23,11 @@ public class Inventario {
         this.cantidad=cantidad;
     }
 
-    public int getProducto() {
+    public String getProducto() {
         return producto;
     }
 
-    public void setProducto(int producto) {
+    public void setProducto(String producto) {
         this.producto = producto;
     }
 

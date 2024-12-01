@@ -26,12 +26,13 @@ public class Proveedor {
 
     public Proveedor(){}
     
-    public Proveedor(int nit, String nombre, String direccion, String contacto, int tel_contacto){
+    public Proveedor(int nit, String nombre, String direccion, String contacto, int tel_contacto, List<Integer> productos) {
         this.nit = nit;
         this.nombre = nombre;
         this.direccion = direccion;
         this.contacto = contacto;
         this.tel_contacto = tel_contacto;
+        this.productos = productos;
     }
 
 

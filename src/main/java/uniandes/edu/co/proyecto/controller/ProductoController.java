@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 import uniandes.edu.co.proyecto.modelo.Producto;
-import uniandes.edu.co.proyecto.repositorio.ProductoRepository;
-import uniandes.edu.co.proyecto.repositorio.ProductoRepository.RespuestaInsuficiente;
+import uniandes.edu.co.proyecto.repository.CategoriaRepository;
+import uniandes.edu.co.proyecto.repository.ProductoRepository;
+
 
 @RestController
 public class ProductoController {
@@ -24,54 +25,48 @@ public class ProductoController {
     @Autowired
     private ProductoRepository productoRepository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
     @GetMapping("/productos")
     public Collection<Producto> getProductos() {
-        return productoRepository.darProductos();
+        return productoRepository.buscarProductos();
     }
 
-    /*RFC2 */
+    /*RFC1 */
     @GetMapping("/productos/consulta")
     public ResponseEntity<Collection<Producto>> getProductosFiltro(@RequestParam(required = false) String filtro, 
-                                                    @RequestParam(required = false) Long sucursal,
+                                                    @RequestParam(required = false) Integer sucursal,
                                                     @RequestParam(required = false) String fecha,
                                                     @RequestParam(required = false) Integer precioMin,
                                                     @RequestParam(required = false) Integer precioMax,
-                                                    @RequestParam(required = false) Long categoria){
+                                                    @RequestParam(required = false) Integer categoria){
         Collection<Producto> response;
-        if (filtro.isEmpty()){response=productoRepository.darProductos();}
-        else if (filtro.equals("sucursal") && sucursal!=null){response=productoRepository.darProductoSucursal(sucursal);}
-        else if (filtro.equals("fechaMax") && fecha!=null){response=productoRepository.darProductoAnterior(fecha);}
-        else if (filtro.equals("fechaMin") && fecha!=null){response=productoRepository.darProductoPosterior(fecha);}
-        else if (filtro.equals("categoria") && categoria!=null){response=productoRepository.darProductoCategoria(categoria);}
-        else if (filtro.equals("rangoPrecio")){response=productoRepository.darProductoRangoPrecios(precioMin, precioMax);}
+        if (filtro.isEmpty()){response=productoRepository.buscarProductos();}
+        //else if (filtro.equals("sucursal") && sucursal!=null){response=productoRepository.darProductoSucursal(sucursal);}
+        else if (filtro.equals("fechaMax") && fecha!=null){response=productoRepository.buscarFechaMaxima(fecha);}
+        else if (filtro.equals("fechaMin") && fecha!=null){response=productoRepository.buscarFechaMinima(fecha);}
+        else if (filtro.equals("categoria") && categoria!=null){response=productoRepository.buscarProductoPorCategoria(categoria);}
+        else if (filtro.equals("rangoPrecio")){response=productoRepository.buscarRangoPrecios(precioMin, precioMax);}
         else{
-            response=productoRepository.darProductos();}
+            response=productoRepository.buscarProductos();}
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/productos/{codigo}")
     public ResponseEntity<Producto> getProducto(@PathVariable("codigo")int codigo) {
         try {
-            Producto producto = productoRepository.darProducto(codigo);
+            Producto producto = productoRepository.buscarProductoPorId(codigo).getFirst();
             return ResponseEntity.ok(producto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    /*RFC5 */
-    @GetMapping("/productos/insuficientes")
-    public ResponseEntity<Collection<RespuestaInsuficiente>> getProductosInsuficientes() {
-        try {
-            Collection<RespuestaInsuficiente> productos = productoRepository.darProductoInsuficiente();
-            return ResponseEntity.ok(productos);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
+    
     @GetMapping("/productos/consultaNombre")
     public ResponseEntity<Collection<Producto>> getProductosNombre(@RequestParam(required=true)String nombre) {
         try {
-            Collection<Producto> producto = productoRepository.darProductoPorNombre(nombre);
+            Collection<Producto> producto = productoRepository.buscarProductoPorNombre(nombre);
             return ResponseEntity.ok(producto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -81,7 +76,16 @@ public class ProductoController {
     @PostMapping("/productos/new/save")
     public ResponseEntity<String> productoGuardar(@RequestBody Producto producto) {
         try{
-            productoRepository.insertarProducto(producto.getNombre(), producto.getCosto_bodega(), producto.getPrecio_unitario(), producto.getPresentacion(), producto.getPeso(),  producto.getVolumen(), producto.getUnidad_medida(), producto.getCantidad_presentacion(),  producto.getFecha_vencimiento(), producto.getCategoria().getCodigo());
+            if (productoRepository.buscarProductoPorNombre(producto.getNombre()).size() > 0){
+                return new ResponseEntity<>("El producto ya existe", HttpStatus.CONFLICT);
+            }
+            if (categoriaRepository.buscarCategoriaPorId(producto.getCategoria()).size() == 0){
+                return new ResponseEntity<>("La categoria no existe", HttpStatus.BAD_REQUEST);
+            }
+            if (producto.getCosto_bodega() <= 0 || producto.getPrecio_unitario() <= 0 || producto.getPeso() <= 0 || producto.getVolumen() <= 0 || producto.getCantidad_presentacion() <= 0|| producto.getCategoria() <= 0 || producto.getFecha_vencimiento() == null || producto.getNombre() == null || producto.getPresentacion() == null || producto.getUnidad_medida() == null){
+                return new ResponseEntity<>("Valores faltantes", HttpStatus.BAD_REQUEST);
+            }
+            productoRepository.insertarProducto(producto);
             return new ResponseEntity<>("Producto creado exitosamente", HttpStatus.CREATED);
         }
         catch(Exception e){
@@ -90,10 +94,19 @@ public class ProductoController {
     }
 
     @PutMapping("/productos/{cod_barras}/edit/save")
-    public ResponseEntity<String> ordenEditarGuardar(@PathVariable("cod_barras")Long cod_barras, @RequestBody Producto producto){
+    public ResponseEntity<?> ordenEditarGuardar(@PathVariable("cod_barras")int cod_barras, @RequestBody Producto producto){
         try{
-            productoRepository.actualizarProducto(cod_barras, producto.getNombre(), producto.getCosto_bodega(), producto.getPrecio_unitario(), producto.getPresentacion(), producto.getPeso(),  producto.getVolumen(), producto.getUnidad_medida(), producto.getCantidad_presentacion(),  producto.getFecha_vencimiento(), producto.getCategoria().getCodigo());
-            return new ResponseEntity<>("Producto actualizado exitosamente", HttpStatus.OK);
+            if (productoRepository.buscarProductoPorId(cod_barras).size() == 0){
+                return new ResponseEntity<>("El producto no existe", HttpStatus.NOT_FOUND);
+            }
+            if (categoriaRepository.buscarCategoriaPorId(producto.getCategoria()).size() == 0){
+                return new ResponseEntity<>("La categoria no existe", HttpStatus.BAD_REQUEST);
+            }
+            if (producto.getCosto_bodega() <= 0 || producto.getPrecio_unitario() <= 0 || producto.getPeso() <= 0 || producto.getVolumen() <= 0 || producto.getCantidad_presentacion() <= 0|| producto.getCategoria() <= 0 || producto.getFecha_vencimiento() == null || producto.getNombre() == null || producto.getPresentacion() == null || producto.getUnidad_medida() == null){
+                return new ResponseEntity<>("Valores faltantes", HttpStatus.BAD_REQUEST);
+            }
+            productoRepository.actualizarProducto(cod_barras, producto.getNombre(), producto.getCosto_bodega(), producto.getPrecio_unitario(), producto.getPresentacion(), producto.getCantidad_presentacion(), producto.getUnidad_medida(), producto.getPeso(),  producto.getVolumen(),  producto.getFecha_vencimiento(), producto.getCategoria());
+            return new ResponseEntity<Producto>(producto, HttpStatus.OK);
         }
         catch(Exception e){
             return new ResponseEntity<>("Error al actualizar el producto", HttpStatus.INTERNAL_SERVER_ERROR);

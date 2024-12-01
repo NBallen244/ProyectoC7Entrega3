@@ -3,10 +3,8 @@ package uniandes.edu.co.proyecto.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,15 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uniandes.edu.co.proyecto.modelo.Orden;
 import uniandes.edu.co.proyecto.modelo.ProductosOrden;
-import uniandes.edu.co.proyecto.repositorio.OfertaRepository;
-import uniandes.edu.co.proyecto.repositorio.OfertaRepository.ProductosProveedor;
-import uniandes.edu.co.proyecto.repositorio.OrdenRepository;
-import uniandes.edu.co.proyecto.repositorio.ProductosOrdenRepository;
+import uniandes.edu.co.proyecto.modelo.Proveedor;
+import uniandes.edu.co.proyecto.repository.OrdenRepository;
+import uniandes.edu.co.proyecto.repository.ProveedorRepository;
+import uniandes.edu.co.proyecto.repository.SucursalRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,28 +31,26 @@ public class OrdenController {
 
     @Autowired
     private OrdenRepository ordenRepository;
-
     @Autowired
-    private OfertaRepository ofertaRepository;
-
+    private ProveedorRepository proveedorRepository;
     @Autowired
-    private ProductosOrdenRepository productosOrdenRepository;
+    private SucursalRepository sucursalRepository;
 
     @GetMapping("/ordenes")
     public Collection<Orden> getOrdenes() {
-        return ordenRepository.darOrdenes();
+        return ordenRepository.buscarOrdenes();
     }
 
     @GetMapping("/ordenes/{id}")
-    public ResponseEntity<?> getDetallesOrden(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getDetallesOrden(@PathVariable("id") int id) {
         try {
-            Collection<ProductosOrden> productos = productosOrdenRepository.darProductosXOrden(id);
-            Orden orden=ordenRepository.darOrden(id);
-            Map<String, Object> response = new HashMap<>();
-            response.put("orden", orden);
-            response.put("Productos", productos);
+            List<Orden> ordenes = ordenRepository.buscarPorId(id);
+            if (ordenes.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Orden no encontrada");
+            }
+            Orden orden = ordenes.getFirst();
 
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(orden);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
@@ -64,84 +59,61 @@ public class OrdenController {
     @PostMapping("/ordenes/new/save")
     public ResponseEntity<String> ordenGuardar(@RequestBody Orden norden, @RequestParam(required = true) String productos, @RequestParam(required = true) String precios, @RequestParam(required = true) String cantidades) {
         try{
-            long[] id_productos= Arrays.stream(productos.split(",")).mapToLong(f -> Long.parseLong(f)).toArray();
-            long[] val_precios= Arrays.stream(precios.split(",")).mapToLong(f -> Long.parseLong(f)).toArray();
-            long[] val_cantidades= Arrays.stream(cantidades.split(",")).mapToLong(f -> Long.parseLong(f)).toArray();
-            norden.setFechaCreacion(new Date(new java.util.Date().getTime()));
+            int[] id_productos= Arrays.stream(productos.split(",")).mapToInt(f -> Integer.parseInt(f)).toArray();
+            int[] val_precios= Arrays.stream(precios.split(",")).mapToInt(f -> Integer.parseInt(f)).toArray();
+            int[] val_cantidades= Arrays.stream(cantidades.split(",")).mapToInt(f -> Integer.parseInt(f)).toArray();
+
+            if (id_productos.length!=val_precios.length||id_productos.length!=val_cantidades.length){
+                return new ResponseEntity<>("Error al crear la orden. Cantidad de productos no concuerda con cantidad de precios/cantidades", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            if (norden.getProveedor()==0||norden.getSucursal_destino()==0||norden.getEstado()==null||norden.getFecha_estimada()==null){
+                return new ResponseEntity<>("Proveedor inválido", HttpStatus.CREATED);
+            }
+            norden.setFechaCreacion(new Date());
             if (norden.getFecha_estimada().compareTo(norden.getFecha_creacion())<0){
-                return new ResponseEntity<>("Fecha inválida, debe ser posterior a la actual", HttpStatus.CREATED);
+                return new ResponseEntity<>("Fecha estimada inválida, debe ser posterior a la actual", HttpStatus.CREATED);
             }
-            int productosValidos=0;
-            String productos_rechazados=" ";
-            List<Long> id_productosP= new ArrayList<Long>();
-
-            ordenRepository.insertarOrden(norden.getFecha_creacion(), norden.getFecha_estimada(), norden.getProveedor().getNIT(), norden.getSucursal_destino().getId());
-            Orden creada=ordenRepository.darUltimaOrden();
-            Collection<ProductosProveedor> productosProveedores = ofertaRepository.darProductosXproveedor(norden.getProveedor().getNIT());
-            for(ProductosProveedor pp: productosProveedores){
-                id_productosP.add(pp.getP());
+            if (proveedorRepository.buscarProveedorPorId(norden.getProveedor()).isEmpty()){
+                return new ResponseEntity<>("Proveedor no encontrado", HttpStatus.CREATED);
+            }
+            if (sucursalRepository.buscarSucursalPorId(norden.getSucursal_destino()).isEmpty()){
+                return new ResponseEntity<>("Sucursal no encontrada", HttpStatus.CREATED);
             }
 
-            for(int i=0; i<id_productos.length; i++){
-                long idP=id_productos[i];
-                if(id_productosP.contains(idP)){
-                    productosValidos++;
-                    productosOrdenRepository.insertarProductosOrden(creada.getId(), idP, val_cantidades[i], val_precios[i]);
-                }
-                else{
-                    productos_rechazados+=idP+", ";
+            Proveedor proveedor=proveedorRepository.buscarProveedorPorId(norden.getProveedor()).getFirst();
+            List<Integer> ofertas=proveedor.getProductos();
+            for (int i:id_productos){
+                if (!ofertas.contains(i)){
+                    return new ResponseEntity<>(String.format("Orden cancelada. Producto %d no ofrecido por el proveedor selecionado", i), HttpStatus.CREATED);
                 }
             }
+            for (int i:val_precios){
+                if (i<=0){
+                    return new ResponseEntity<>("Orden cancelada. Precios no pueden ser iguales o menores a 0", HttpStatus.CREATED);
+                }
+            }
+            for (int i:val_cantidades){
+                if (i<=0){
+                    return new ResponseEntity<>("Orden cancelada. Pedir 1 o más unidades de cada producto", HttpStatus.CREATED);
+                }
+            }
 
-            if (productosValidos==0){
-                ordenRepository.eliminarOrden(creada.getId());
-                return new ResponseEntity<>("Productos no ofrecidos por el proveedor seleccionado", HttpStatus.CREATED);}
-            else{
-                return new ResponseEntity<>("Orden creada. Los siguientes productos no se incluyeron por falta de disponibilidad con el proveedor: "+productos_rechazados, HttpStatus.CREATED);}
+            List<ProductosOrden> productosOrden=new ArrayList<>();
+            
+            for (int i=0;i<id_productos.length;i++){
+                ProductosOrden producto=new ProductosOrden(id_productos[i], val_precios[i], val_cantidades[i]);
+                productosOrden.add(producto);
+            }
+            norden.setProductos(productosOrden);
+            ordenRepository.insertarOrden(norden);
+            return new ResponseEntity<>("Orden creada exitosamente", HttpStatus.CREATED);
+            
+
         }
         catch(Exception e){
             return new ResponseEntity<>("Error al crear la orden", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
     }
-    
-    @PutMapping("/ordenes/{id}/edit/anular/save")
-    public ResponseEntity<String> ordenAnularGuardar(@PathVariable("id")Long id){
-        try{
-            Orden orden=ordenRepository.darOrden(id);
-            if(orden.getEstado().equals("entregada")){
-                return new ResponseEntity<>("Error al anular la orden-orden entregada", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            if(orden.getEstado().equals("anulada")){
-                return new ResponseEntity<>("Error al anular la orden-orden ya anulada", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            ordenRepository.actualizarOrdenAnulada(id);
-            return new ResponseEntity<>("Orden anulada exitosamente", HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>("Error al anular la orden-orden inexistente", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/ordenes/{id}/edit/entregar/save")
-    public ResponseEntity<String> ordenEntregarGuardar(@PathVariable("id")Long id){
-        try{
-            Orden orden=ordenRepository.darOrden(id);
-            if(orden.getEstado().equals("entregada")){
-                return new ResponseEntity<>("Error al entregar la orden-orden ya entregada", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            if(orden.getEstado().equals("anulada")){
-                return new ResponseEntity<>("Error al entregar la orden-orden anulada", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-            ordenRepository.actualizarOrdenAnulada(id);
-            return new ResponseEntity<>("Orden entregada exitosamente", HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>("Error al entregar la orden-orden inexistente", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
-    
-
-
 }

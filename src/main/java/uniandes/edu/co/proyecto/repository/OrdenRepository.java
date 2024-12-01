@@ -13,4 +13,14 @@ public interface OrdenRepository extends MongoRepository<Orden, Integer>{
     @Query("{_id: ?0}")
     List<Orden> buscarPorId(int id);
 
+    @Query("{sucursal_destino: ?0}")
+    List<Orden> buscarPorSucursal(int id);
+
+    @Query(value="{}", fields="{productos:0}")
+    List<Orden> buscarOrdenes();
+
+    default void insertarOrden(Orden orden){
+        save(orden);
+    }
+
 }

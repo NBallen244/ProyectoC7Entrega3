@@ -1,14 +1,11 @@
 package uniandes.edu.co.proyecto.modelo;
 
-import org.springframework.data.annotation.Id;
-
 import lombok.ToString;
 
 @ToString
 public class Bodega {
 
-    @Id
-    private int id;
+    private int numero;
 
     private String nombre;
 
@@ -23,13 +20,13 @@ public class Bodega {
 
     }
 
-    public int getId() {
-        return id;
+    public int getNumero() {
+        return numero;
     }
 
 
-    public void setId(int id) {
-        this.id = id;
+    public void setNumero(int id) {
+        this.numero = id;
     }
 
     public String getNombre() {
