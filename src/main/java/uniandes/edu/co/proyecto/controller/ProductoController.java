@@ -20,11 +20,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import uniandes.edu.co.proyecto.modelo.Almacenaje;
 import uniandes.edu.co.proyecto.modelo.Producto;
 import uniandes.edu.co.proyecto.modelo.Secuencia;
 import uniandes.edu.co.proyecto.repository.CategoriaRepository;
 import uniandes.edu.co.proyecto.repository.ProductoRepository;
+import uniandes.edu.co.proyecto.repository.ProductosSucursalRepo;
 
 
 @RestController
@@ -35,6 +36,10 @@ public class ProductoController {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    private ProductosSucursalRepo repoConsulta;
+
+    
 
     @Autowired
     private MongoOperations mongoOperations;
@@ -53,15 +58,15 @@ public class ProductoController {
 
     /*RFC1 */
     @GetMapping("/productos/consulta")
-    public ResponseEntity<Collection<Producto>> getProductosFiltro(@RequestParam(required = false) String filtro, 
+    public ResponseEntity<Collection<?>> getProductosFiltro(@RequestParam(required = false) String filtro, 
                                                     @RequestParam(required = false) Integer sucursal,
                                                     @RequestParam(required = false) String fecha,
                                                     @RequestParam(required = false) Integer precioMin,
                                                     @RequestParam(required = false) Integer precioMax,
                                                     @RequestParam(required = false) Integer categoria){
-        Collection<Producto> response;
+        Collection<?> response;
         if (filtro.isEmpty()){response=productoRepository.buscarProductos();}
-        //else if (filtro.equals("sucursal") && sucursal!=null){response=productoRepository.darProductoSucursal(sucursal);}
+        else if (filtro.equals("sucursal") && sucursal!=null){response=repoConsulta.obtenerProductosSucursal(sucursal);}
         else if (filtro.equals("fechaMax") && fecha!=null){response=productoRepository.buscarFechaMaxima(fecha);}
         else if (filtro.equals("fechaMin") && fecha!=null){response=productoRepository.buscarFechaMinima(fecha);}
         else if (filtro.equals("categoria") && categoria!=null){response=productoRepository.buscarProductoPorCategoria(categoria);}
@@ -90,6 +95,7 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @PostMapping("/productos/new/save")
     public ResponseEntity<String> productoGuardar(@RequestBody Producto producto) {

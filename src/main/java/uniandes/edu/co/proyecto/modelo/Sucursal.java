@@ -32,7 +32,8 @@ public class Sucursal {
 
     public Sucursal(){}
 
-    public Sucursal(String nombre, int tamaño, String direccion, int telefono, String ciudad){
+    public Sucursal(int id, String nombre, int tamaño, String direccion, int telefono, String ciudad){
+        this.id = id;
         this.nombre = nombre;
         this.tamaño = tamaño;
         this.direccion = direccion;

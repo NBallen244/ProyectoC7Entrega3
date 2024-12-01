@@ -17,7 +17,7 @@ public interface ProveedorRepository extends MongoRepository<Proveedor, Integer>
     @Query("{_id:?0 }")
     List<Proveedor> buscarProveedorPorId(int id);
 
-    @Query(value="{}", fields="{productos:0}")
+    @Query("{}")
     List<Proveedor> buscaProveedores();
 
     @Query("{_id:?0, productos:{$all:[?1]}  }")

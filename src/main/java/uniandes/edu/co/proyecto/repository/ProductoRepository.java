@@ -1,7 +1,7 @@
 package uniandes.edu.co.proyecto.repository;
 
 import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

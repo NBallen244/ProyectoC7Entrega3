@@ -14,20 +14,20 @@ public interface SucursalRepository  extends MongoRepository<Sucursal, Integer>{
         save(sucursal);
     }
 
-    @Query("{ '_id' : ?0 }")
+    @Query("{ _id : ?0 }")
     List<Sucursal> buscarSucursalPorId(int id);
 
-    @Query(value="{}", fields="bodegas:0")
+    @Query("{}")
     List<Sucursal> buscarSucursales();
 
-    @Query("{'_id' : ?0, bodegas:{numero: ?1}  }")
+    @Query("{_id : ?0, bodegas:{numero: ?1}  }")
     List<Sucursal> buscarSucursalconBodega(int idSucursal, int idBodega);
 
-    @Query("{'_id' : ?0 }")
+    @Query("{_id : ?0 }")
     @Update("{'$pull': {'bodegas': {numero:?1}}}")
     void eliminarBodega(int idSucursal, int idBodega);
 
-    @Query("{'_id' : ?0 }")
+    @Query("{_id : ?0 }")
     @Update("{'$push': {'bodegas': {numero:?1, nombre:?2, tamaño:?3}}}")
     void crearBodega(int idSucursal, int idBodega, String nombre, int tamaño);
 

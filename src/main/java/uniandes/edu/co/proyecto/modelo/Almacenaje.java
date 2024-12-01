@@ -2,6 +2,7 @@ package uniandes.edu.co.proyecto.modelo;
 
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.ToString;
@@ -10,6 +11,8 @@ import lombok.ToString;
 @ToString
 public class Almacenaje {
 
+    @Id
+    private int id;
     private int sucursal;
     private int bodega;
 
@@ -17,10 +20,13 @@ public class Almacenaje {
 
     public Almacenaje(){;}
 
-    public Almacenaje(int bodega, int sucursal){
+    public Almacenaje(int id, int bodega, int sucursal){
+        this.id = id;
         this.bodega = bodega;
         this.sucursal = sucursal;   
     }
+
+    
 
     public int getSucursal() {
         return sucursal;
@@ -44,6 +50,14 @@ public class Almacenaje {
 
     public void setInventarios(List<Inventario> inventarios) {
         this.inventarios = inventarios;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     

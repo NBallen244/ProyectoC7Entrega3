@@ -1,12 +1,20 @@
 package uniandes.edu.co.proyecto.controller;
 
+import static org.springframework.data.mongodb.core.FindAndModifyOptions.options;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
+import static org.springframework.data.mongodb.core.query.Query.query;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +28,11 @@ import uniandes.edu.co.proyecto.modelo.Almacenaje;
 import uniandes.edu.co.proyecto.modelo.Bodega;
 import uniandes.edu.co.proyecto.modelo.Inventario;
 import uniandes.edu.co.proyecto.modelo.Orden;
+import uniandes.edu.co.proyecto.modelo.Secuencia;
 import uniandes.edu.co.proyecto.modelo.Sucursal;
 import uniandes.edu.co.proyecto.repository.AlmacenajeRepository;
 import uniandes.edu.co.proyecto.repository.OrdenRepository;
+import uniandes.edu.co.proyecto.repository.ProductosSucursalRepo;
 import uniandes.edu.co.proyecto.repository.SucursalRepository;
 
 @RestController
@@ -36,6 +46,17 @@ public class SucursalesController {
 
     @Autowired
     private OrdenRepository ordenRepository;
+    @Autowired
+    private MongoOperations mongoOperations;
+    @Autowired
+    private ProductosSucursalRepo repoConsulta;
+
+    public int generateSequence(String seqName) {
+        Secuencia counter = mongoOperations.findAndModify(query(where("_id").is(seqName)),
+        new Update().inc("seq",1), options().returnNew(true).upsert(true),
+        Secuencia.class);
+    return !Objects.isNull(counter) ? counter.getSeq() : 1;
+    }
 
 
     @GetMapping("/sucursales")
@@ -64,14 +85,7 @@ public class SucursalesController {
                 return new ResponseEntity<String>("Las bodegas de la sucursal estan vacías", HttpStatus.BAD_REQUEST);
             }
 
-            Map<String, Object> inventarioMap = new HashMap<>();
-            inventarioMap.put("sucursal", String.valueOf(id)+'-'+sucursal.getNombre());
-            inventarioMap.put("bodegas", new ArrayList<Map<Integer, List<Inventario>>>());
-            for (Almacenaje almacenaje : inventario) {
-                Map<Integer, List<Inventario>> bodegaMap = new HashMap<>();
-                bodegaMap.put(almacenaje.getBodega(), almacenaje.getInventarios());
-                ((ArrayList<Map<Integer, List<Inventario>>>) inventarioMap.get("bodegas")).add(bodegaMap);
-            }
+            List<Document> inventarioMap=repoConsulta.obtenerInventarioSucursal(id);
             return ResponseEntity.ok(inventarioMap);
             
         } catch (Exception e) {
@@ -98,6 +112,7 @@ public class SucursalesController {
                     }
                 }
             }
+            sucursal.setId(generateSequence(Sucursal.SEQUENCE_NAME));
             sucursalRepository.insertarSucursal(sucursal);
             return new ResponseEntity<>("Sucursal creada exitosamente", HttpStatus.CREATED);
         } catch (Exception e) {
@@ -121,11 +136,12 @@ public class SucursalesController {
                     sucursalRepository.crearBodega(id, bodega.getNumero(), bodega.getNombre(), bodega.getTamaño());
                 }
             }
-            return new ResponseEntity<>("Sucursal creada exitosamente", HttpStatus.CREATED);
+            return new ResponseEntity<>("Bodega creada exitosamente", HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<>("Error al crear la Sucursal", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error al crear la bodega", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
 
     @PutMapping("/sucursales/{id}/deleteBodega/{idBodega}")
     public ResponseEntity<String> borrarBodega(@PathVariable("id") int id, @PathVariable("idBodega") int idBodega) {

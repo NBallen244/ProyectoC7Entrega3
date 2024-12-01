@@ -125,6 +125,7 @@ public class OrdenController {
             }
             norden.setProductos(productosOrden);
             norden.setId(generateSequence(Orden.SEQUENCE_NAME));
+            norden.setEstado("Vigente");
             ordenRepository.insertarOrden(norden);
             return new ResponseEntity<>("Orden creada exitosamente", HttpStatus.CREATED);
             

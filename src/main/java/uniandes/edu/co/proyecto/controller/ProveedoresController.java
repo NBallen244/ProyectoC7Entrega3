@@ -1,5 +1,7 @@
 package uniandes.edu.co.proyecto.controller;
 
+
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +28,7 @@ public class ProveedoresController {
     private ProveedorRepository proveedorRepository;
 
 
+
     @GetMapping("/proveedores")
     public ResponseEntity<Collection<Proveedor>> proveedores() {
         try {
@@ -35,6 +38,17 @@ public class ProveedoresController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/proveedores/{nit}")
+    public ResponseEntity<Collection<Proveedor>> proveedoresPorid(@PathVariable("nit") int nit) {
+        try {
+            Collection<Proveedor> proveedores = proveedorRepository.buscarProveedorPorId(nit);
+            return ResponseEntity.ok(proveedores);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     @PostMapping("/proveedores/new/save")
     public ResponseEntity<String> proveedorGuardar(@RequestBody Proveedor proveedor) {
