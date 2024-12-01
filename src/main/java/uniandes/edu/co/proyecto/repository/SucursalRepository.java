@@ -20,7 +20,7 @@ public interface SucursalRepository  extends MongoRepository<Sucursal, Integer>{
     @Query("{}")
     List<Sucursal> buscarSucursales();
 
-    @Query("{_id : ?0, bodegas:{numero: ?1}  }")
+    @Query("{_id : ?0, 'bodegas.numero':{$eq: ?1}  }")
     List<Sucursal> buscarSucursalconBodega(int idSucursal, int idBodega);
 
     @Query("{_id : ?0 }")

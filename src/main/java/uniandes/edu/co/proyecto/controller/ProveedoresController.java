@@ -69,6 +69,7 @@ public class ProveedoresController {
                     productosActuales.add(i);
                 }
             }
+            proveedorRepository.insertarProveedor(proveedor);
             return new ResponseEntity<>("Proveedor creado exitosamente", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al crear al proveedor", HttpStatus.INTERNAL_SERVER_ERROR);

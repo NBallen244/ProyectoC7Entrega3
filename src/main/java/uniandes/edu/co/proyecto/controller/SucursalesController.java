@@ -6,9 +6,7 @@ import static org.springframework.data.mongodb.core.query.Query.query;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import org.bson.Document;
@@ -26,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import uniandes.edu.co.proyecto.modelo.Almacenaje;
 import uniandes.edu.co.proyecto.modelo.Bodega;
-import uniandes.edu.co.proyecto.modelo.Inventario;
 import uniandes.edu.co.proyecto.modelo.Orden;
 import uniandes.edu.co.proyecto.modelo.Secuencia;
 import uniandes.edu.co.proyecto.modelo.Sucursal;
@@ -132,7 +129,7 @@ public class SucursalesController {
                     return new ResponseEntity<>("Faltan datos", HttpStatus.BAD_REQUEST);
                 }
                 else{
-                    bodega.setNumero(prueba.size()+1);
+                    bodega.setNumero(prueba.get(0).getBodegas().size()+1);
                     sucursalRepository.crearBodega(id, bodega.getNumero(), bodega.getNombre(), bodega.getTamaño());
                 }
             }
@@ -165,7 +162,7 @@ public class SucursalesController {
                     sucursalRepository.eliminarBodega(id, idBodega); 
                 }
             }
-            return new ResponseEntity<>("Sucursal creada exitosamente", HttpStatus.CREATED);
+            return new ResponseEntity<>("Bodega eliminada exitosamente", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Error al crear la bodega", HttpStatus.INTERNAL_SERVER_ERROR);
         }

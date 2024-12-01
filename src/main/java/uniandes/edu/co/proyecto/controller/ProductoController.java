@@ -121,10 +121,10 @@ public class ProductoController {
         }
     }
 
-    @PutMapping("/productos/{cod_barras}/edit/save")
-    public ResponseEntity<?> ordenEditarGuardar(@PathVariable("cod_barras")int cod_barras, @RequestBody Producto producto){
+    @PutMapping("/productos/{id}/edit/save")
+    public ResponseEntity<?> ordenEditarGuardar(@PathVariable("id")int id, @RequestBody Producto producto){
         try{
-            if (productoRepository.buscarProductoPorId(cod_barras).size() == 0){
+            if (productoRepository.buscarProductoPorId(id).size() == 0){
                 return new ResponseEntity<>("El producto no existe", HttpStatus.NOT_FOUND);
             }
             if (categoriaRepository.buscarCategoriaPorId(producto.getCategoria()).size() == 0){
@@ -133,7 +133,8 @@ public class ProductoController {
             if (producto.getCosto_bodega() <= 0 || producto.getPrecio_unitario() <= 0 || producto.getPeso() <= 0 || producto.getVolumen() <= 0 || producto.getCantidad_presentacion() <= 0|| producto.getCategoria() <= 0 || producto.getFecha_vencimiento() == null || producto.getNombre() == null || producto.getPresentacion() == null || producto.getUnidad_medida() == null){
                 return new ResponseEntity<>("Valores faltantes", HttpStatus.BAD_REQUEST);
             }
-            productoRepository.actualizarProducto(cod_barras, producto.getNombre(), producto.getCosto_bodega(), producto.getPrecio_unitario(), producto.getPresentacion(), producto.getCantidad_presentacion(), producto.getUnidad_medida(), producto.getPeso(),  producto.getVolumen(),  producto.getFecha_vencimiento(), producto.getCategoria());
+            productoRepository.actualizarProducto(id, producto.getNombre(), producto.getCosto_bodega(), producto.getPrecio_unitario(), producto.getPresentacion(), producto.getCantidad_presentacion(), producto.getUnidad_medida(), producto.getPeso(),  producto.getVolumen(),  producto.getFecha_vencimiento(), producto.getCategoria());
+            producto.setCodigoBarras(id);
             return new ResponseEntity<Producto>(producto, HttpStatus.OK);
         }
         catch(Exception e){
