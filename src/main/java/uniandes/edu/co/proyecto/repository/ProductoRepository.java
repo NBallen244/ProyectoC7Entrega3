@@ -24,13 +24,13 @@ public interface ProductoRepository extends MongoRepository<Producto, Integer>{
     @Query("{nombre:?0 }")
     List<Producto> buscarProductoPorNombre(String nombre);
 
-    @Query("{fecha_vencimiento:{$lt:ISODate(?0)}}")
-    List<Producto> buscarFechaMaxima(String fecha);
+    @Query("{fecha_vencimiento:{$lt:?0}}")
+    List<Producto> buscarFechaMaxima(Date fecha);
 
-    @Query("{fecha_vencimiento:{$gt:ISODate(?0)}}")
-    List<Producto> buscarFechaMinima(String fecha);
+    @Query("{fecha_vencimiento:{$gt:?0}}")
+    List<Producto> buscarFechaMinima(Date fecha);
 
-    @Query("{precio_unidad:{$gt:?0, $lt:?1}}")
+    @Query("{precio_unitario:{$gt:?0, $lt:?1}}")
     List<Producto> buscarRangoPrecios(int minimo, int maximo);
 
     @Query("{categoria:?0 }")

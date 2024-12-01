@@ -4,7 +4,10 @@ import static org.springframework.data.mongodb.core.FindAndModifyOptions.options
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 import static org.springframework.data.mongodb.core.query.Query.query;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +66,13 @@ public class ProductoController {
                                                     @RequestParam(required = false) String fecha,
                                                     @RequestParam(required = false) Integer precioMin,
                                                     @RequestParam(required = false) Integer precioMax,
-                                                    @RequestParam(required = false) Integer categoria){
+                                                    @RequestParam(required = false) Integer categoria) throws ParseException{
         Collection<?> response;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         if (filtro.isEmpty()){response=productoRepository.buscarProductos();}
         else if (filtro.equals("sucursal") && sucursal!=null){response=repoConsulta.obtenerProductosSucursal(sucursal);}
-        else if (filtro.equals("fechaMax") && fecha!=null){response=productoRepository.buscarFechaMaxima(fecha);}
-        else if (filtro.equals("fechaMin") && fecha!=null){response=productoRepository.buscarFechaMinima(fecha);}
+        else if (filtro.equals("fechaMax") && fecha!=null){response=productoRepository.buscarFechaMaxima(formatter.parse(fecha));}
+        else if (filtro.equals("fechaMin") && fecha!=null){response=productoRepository.buscarFechaMinima(formatter.parse(fecha));}
         else if (filtro.equals("categoria") && categoria!=null){response=productoRepository.buscarProductoPorCategoria(categoria);}
         else if (filtro.equals("rangoPrecio")){response=productoRepository.buscarRangoPrecios(precioMin, precioMax);}
         else{
